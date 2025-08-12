@@ -14,9 +14,9 @@ const app = express();
 
 app.use(
   cors({
-    origin: 'https://googlesheets-1-9526.onrender.com',
+    origin: 'https://googlesheets-1-9526.onrender.com', 
     methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials:true
+    credentials: true,
   })
 );
 
