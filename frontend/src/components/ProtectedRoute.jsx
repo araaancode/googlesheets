@@ -11,7 +11,7 @@ const ProtectedRoute = () => {
   useEffect(() => {
     const verifyAuth = async () => {
       try {
-        await axios.get('http://localhost:5000/api/auth/me', {
+        await axios.get('https://googlesheets-onxc.onrender.com/api/auth/me', {
           withCredentials: true
         });
         setIsAuthenticated(true);
