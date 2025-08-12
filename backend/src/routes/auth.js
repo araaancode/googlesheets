@@ -50,12 +50,11 @@ router.post("/login", async (req, res) => {
       { expiresIn: "1d" }
     );
 
-   res.cookie("token", token, {
+res.cookie("token", token, {
   httpOnly: true,
   secure: true,
-  sameSite: 'none',  
-  maxAge: 24 * 3600 * 1000,
-  domain: "googlesheets-1-9526.onrender.com" 
+  sameSite: 'none', 
+  maxAge: 24 * 3600 * 1000, 
 });
 
     res.json({
