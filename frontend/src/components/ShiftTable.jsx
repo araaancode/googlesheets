@@ -18,7 +18,7 @@ export default function ShiftTable() {
 
   const fetchShifts = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/shifts", { 
+      const res = await axios.get("https://googlesheets-onxc.onrender.com/api/shifts", { 
         withCredentials: true 
       });
       setGrid(res.data.grid || []);
@@ -39,7 +39,7 @@ export default function ShiftTable() {
   const handleDelete = async (day, shift) => {
     if (window.confirm("آیا از حذف این شیفت مطمئن هستید؟")) {
       try {
-        await axios.delete(`http://localhost:5000/api/shifts/${day}/${shift}`, {
+        await axios.delete(`https://googlesheets-onxc.onrender.com/api/shifts/${day}/${shift}`, {
           withCredentials: true
         });
         toast.success("شیفت با موفقیت حذف شد");
@@ -52,7 +52,7 @@ export default function ShiftTable() {
 
   const handleUpdate = async () => {
     try {
-      await axios.put("http://localhost:5000/api/shifts", editData, {
+      await axios.put("https://googlesheets-onxc.onrender.com/api/shifts", editData, {
         withCredentials: true
       });
       toast.success("شیفت با موفقیت به‌روزرسانی شد");
