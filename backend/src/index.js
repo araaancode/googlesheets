@@ -14,7 +14,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: 'https://googlesheets-gb76.vercel.app',
+    origin: 'https://googlesheets-1-9526.onrender.com/',
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials:true
   })
