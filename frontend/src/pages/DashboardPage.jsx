@@ -15,7 +15,7 @@ export default function Dashboard() {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/auth/me",
+          "https://googlesheets-onxc.onrender.com/api/auth/me",
           { withCredentials: true }
         );
         setUser(response.data);
@@ -35,7 +35,7 @@ export default function Dashboard() {
     setIsLoggingOut(true);
     try {
       await axios.post(
-        "http://localhost:5000/api/auth/logout",
+        "https://googlesheets-onxc.onrender.com/api/auth/logout",
         {},
         { withCredentials: true }
       );
