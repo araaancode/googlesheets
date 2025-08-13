@@ -18,7 +18,7 @@ export default function ShiftTable() {
 
   const fetchShifts = async () => {
     try {
-      const res = await axios.get("https://googlesheets-onxc.onrender.com/api/shifts", { 
+      const res = await axios.get("http://localhost:5000/api/shifts", { 
         withCredentials: true 
       });
       setGrid(res.data.grid || []);
@@ -32,19 +32,14 @@ export default function ShiftTable() {
 
   const handleEdit = (day, shift) => {
     const shiftData = grid.find(d => d.day === day)?.shifts?.find(s => s.shift === shift);
-    setEditData({ 
-      day, 
-      shift, 
-      status: shiftData?.status,
-      user: shiftData?.user || ""
-    });
+    setEditData({ day, shift, status: shiftData?.status });
     setIsEditing(true);
   };
 
   const handleDelete = async (day, shift) => {
     if (window.confirm("آیا از حذف این شیفت مطمئن هستید؟")) {
       try {
-        await axios.delete(`https://googlesheets-onxc.onrender.com/api/shifts/${day}/${shift}`, {
+        await axios.delete(`http://localhost:5000/api/shifts/${day}/${shift}`, {
           withCredentials: true
         });
         toast.success("شیفت با موفقیت حذف شد");
@@ -57,7 +52,7 @@ export default function ShiftTable() {
 
   const handleUpdate = async () => {
     try {
-      await axios.put("https://googlesheets-onxc.onrender.com/api/shifts", editData, {
+      await axios.put("http://localhost:5000/api/shifts", editData, {
         withCredentials: true
       });
       toast.success("شیفت با موفقیت به‌روزرسانی شد");
@@ -69,10 +64,7 @@ export default function ShiftTable() {
   };
 
   const filteredGrid = grid.filter(item => 
-    item.day.toString().includes(searchTerm) ||
-    (item.shifts && item.shifts.some(shift => 
-      shift.user && shift.user.toString().includes(searchTerm)
-    ))
+    item.day.toString().includes(searchTerm)
   );
 
   const renderStatus = (status) => {
@@ -132,7 +124,7 @@ export default function ShiftTable() {
             type="text"
             dir="rtl"
             className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm transition-all"
-            placeholder="جستجوی روز یا کاربر..."
+            placeholder="جستجوی روز..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -157,17 +149,6 @@ export default function ShiftTable() {
                   <option value="available">موجود</option>
                   <option value="not available">غیرموجود</option>
                 </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">کاربر</label>
-                <input
-                  type="text"
-                  dir="rtl"
-                  className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                  value={editData.user || ''}
-                  onChange={(e) => setEditData({...editData, user: e.target.value})}
-                  placeholder="نام کاربر را وارد کنید"
-                />
               </div>
               <div className="flex gap-3">
                 <button
@@ -202,19 +183,10 @@ export default function ShiftTable() {
                 شیفت صبح
               </th>
               <th scope="col" className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                کاربر صبح
-              </th>
-              <th scope="col" className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 شیفت عصر
               </th>
               <th scope="col" className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                کاربر عصر
-              </th>
-              <th scope="col" className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 شیفت شب
-              </th>
-              <th scope="col" className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                کاربر شب
               </th>
               <th scope="col" className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 اقدامات
@@ -224,9 +196,9 @@ export default function ShiftTable() {
           <tbody className="bg-white divide-y divide-gray-200">
             {filteredGrid.length > 0 ? (
               filteredGrid.map(({ day, shifts }) => {
-                const morningShift = shifts?.find(s => s.shift === "morning");
-                const eveningShift = shifts?.find(s => s.shift === "evening");
-                const nightShift = shifts?.find(s => s.shift === "night");
+                const morningShift = shifts.find(s => s.shift === "morning");
+                const eveningShift = shifts.find(s => s.shift === "evening");
+                const nightShift = shifts.find(s => s.shift === "night");
 
                 return (
                   <tr key={day} className="hover:bg-gray-50 transition-colors">
@@ -238,20 +210,11 @@ export default function ShiftTable() {
                     <td className="px-6 py-4 whitespace-nowrap text-center">
                       {renderStatus(morningShift?.status)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center text-sm">
-                      {morningShift?.user || '-'}
-                    </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
                       {renderStatus(eveningShift?.status)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center text-sm">
-                      {eveningShift?.user || '-'}
-                    </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
                       {renderStatus(nightShift?.status)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center text-sm">
-                      {nightShift?.user || '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
                       <div className="flex justify-center gap-4">
@@ -283,7 +246,7 @@ export default function ShiftTable() {
               })
             ) : (
               <tr>
-                <td colSpan="8" className="px-6 py-8 text-center">
+                <td colSpan="5" className="px-6 py-8 text-center">
                   <div className="flex flex-col items-center justify-center text-gray-400">
                     <FaSearch className="mb-2" size={24} />
                     <p className="text-sm">هیچ داده‌ای یافت نشد</p>
