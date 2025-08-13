@@ -70,9 +70,9 @@ export default function ShiftTable() {
 
   const filteredGrid = grid.filter(item => 
     item.day.toString().includes(searchTerm) ||
-    (item.shifts.some(shift => 
+    (item.shifts && item.shifts.some(shift => 
       shift.user && shift.user.toString().includes(searchTerm)
-    )
+    ))
   );
 
   const renderStatus = (status) => {
@@ -224,9 +224,9 @@ export default function ShiftTable() {
           <tbody className="bg-white divide-y divide-gray-200">
             {filteredGrid.length > 0 ? (
               filteredGrid.map(({ day, shifts }) => {
-                const morningShift = shifts.find(s => s.shift === "morning");
-                const eveningShift = shifts.find(s => s.shift === "evening");
-                const nightShift = shifts.find(s => s.shift === "night");
+                const morningShift = shifts?.find(s => s.shift === "morning");
+                const eveningShift = shifts?.find(s => s.shift === "evening");
+                const nightShift = shifts?.find(s => s.shift === "night");
 
                 return (
                   <tr key={day} className="hover:bg-gray-50 transition-colors">
